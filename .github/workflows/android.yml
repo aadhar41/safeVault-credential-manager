@@ -37,13 +37,20 @@ jobs:
             exit 1
           fi
 
+      # FIX: Removes local Windows Java paths that break GitHub builds
+      - name: Sanitize Gradle Properties
+        run: |
+          if [ -f "android/gradle.properties" ]; then
+            sed -i '/org.gradle.java.home/d' android/gradle.properties
+            echo "Removed hardcoded java.home from gradle.properties"
+          fi
+
       - name: Give Gradlew Permissions
         run: chmod +x android/gradlew
 
       - name: Build APK
         run: cd android && ./gradlew assembleDebug
 
-      # This step searches the entire runner for any APK files
       - name: Locate APK File
         id: locate_apk
         run: |
