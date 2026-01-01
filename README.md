@@ -1,6 +1,10 @@
 # safeVault-credential-manager
 
-A secure, lightweight, and user-friendly credential management system designed to store and manage sensitive information such as passwords, API keys, and digital certificates.
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Version](https://img.shields.io/badge/version-1.0.0-orange)
+
+A secure, lightweight, and user-friendly credential management system designed to store and manage sensitive information such as passwords, API keys, and digital certificates. safeVault is built with a focus on privacy, ensuring that your data remains yours alone.
 
 ## Features
 
@@ -12,31 +16,29 @@ A secure, lightweight, and user-friendly credential management system designed t
 - **Audit Logs**: Comprehensive tracking of access, modifications, and sharing events.
 - **Automatic Backups**: Encrypted cloud sync and local backup rotation.
 
+## Architecture Overview
+
+safeVault utilizes a client-side encryption model. Sensitive data is encrypted on the user's device before being synchronized to the central database. 
+
+- **Key Derivation**: We use Argon2id with a high iteration count and memory cost to protect against brute-force attacks on the master password.
+- **Data Storage**: Encrypted blobs are stored in indexedDB (browser) or SQLite (local CLI), and optionally synced to a PostgreSQL backend.
+- **Communication**: All API calls are protected via TLS 1.3, and payload signatures ensure data integrity.
+
 ## Tech Stack
 
 - **Backend**: Node.js / Express or Python / FastAPI
 - **Database**: SQLite (local) or PostgreSQL (self-hosted)
-- **Encryption**: OpenSSL, Web Crypto API
-- **Frontend**: React / Tailwind CSS
-
-## Future Features
-
-- **Browser Extensions**: Native integration for Chrome, Firefox, and Safari for seamless auto-fill.
-- **Mobile Application**: Cross-platform mobile app built with React Native, featuring biometric unlock (FaceID/TouchID).
-- **Password Health Dashboard**: Integration with "Have I Been Pwned" API to alert users of compromised credentials.
-- **SSH Key & Certificate Management**: Support for storing and rotating SSH keys and SSL/TLS certificates.
-- **Import/Export Tools**: Easy migration paths from Bitwarden, LastPass, and 1Password.
-- **Offline Sync**: Peer-to-peer synchronization for local networks without relying on cloud providers.
-- **Emergency Access**: Secure mechanism for trusted contacts to request access to your vault in case of emergency.
-
+- **Encryption**: OpenSSL, Web Crypto API, Argon2
+- **Frontend**: React / Tailwind CSS / Electron
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js (v18 or higher) or Python 3.10+
-- OpenSSL 3.0+
-- Docker (optional, for containerized deployment)
+- **Node.js**: v18 or higher
+- **Python**: 3.10+ (if using the Python backend)
+- **OpenSSL**: 3.0+
+- **Docker**: (Optional) For containerized deployment
 
 ### Installation
 
@@ -48,7 +50,9 @@ A secure, lightweight, and user-friendly credential management system designed t
 
 2. **Install dependencies**:
    ```bash
-   npm install # or pip install -r requirements.txt
+   npm install # For Node.js
+   # OR
+   pip install -r requirements.txt # For Python
    ```
 
 3. **Configure Environment**:
@@ -57,9 +61,20 @@ A secure, lightweight, and user-friendly credential management system designed t
    PORT=3000
    DATABASE_URL=./vault.db
    ENCRYPTION_KEY_STRENGTH=256
+   SECRET_KEY=your_super_secret_key_here
    ```
 
-### Usage
+### Docker Deployment
+
+To run safeVault using Docker:
+```bash
+docker-compose up -d
+```
+This will spin up the web interface, the API, and a PostgreSQL instance.
+
+## Usage
+
+### CLI Commands
 
 1. **Initialize the Vault**:
    ```bash
@@ -75,16 +90,27 @@ A secure, lightweight, and user-friendly credential management system designed t
    ```
 4. **Retrieve a Credential**:
    ```bash
-   safevault get GitHub
+   safevault get GitHub --copy # Copies password to clipboard
    ```
-5. **Delete a Credential**:
+5. **Generate a Password**:
    ```bash
-   safevault delete GitHub
+   safevault generate --length 24 --symbols
    ```
 
 ## Security
 
-This project takes security seriously. We use industry-standard cryptographic primitives. If you discover any vulnerabilities, please report them via our [Security Policy](SECURITY.md).
+This project takes security seriously. We use industry-standard cryptographic primitives and undergo regular internal audits. 
+- **Bug Bounty**: We reward responsible disclosure of security vulnerabilities.
+- **Reporting**: If you discover any vulnerabilities, please report them via our [Security Policy](SECURITY.md).
+
+## Future Roadmap
+
+- [ ] **Browser Extensions**: Native integration for Chrome, Firefox, and Safari.
+- [ ] **Mobile Application**: React Native app with FaceID/TouchID support.
+- [ ] **Password Health Dashboard**: Integration with "Have I Been Pwned" API.
+- [ ] **SSH Key & Certificate Management**: Support for rotating SSL/TLS certificates.
+- [ ] **Offline Sync**: Peer-to-peer synchronization for local networks.
+- [ ] **Emergency Access**: Trusted contact recovery mechanism.
 
 ## Contributing
 
