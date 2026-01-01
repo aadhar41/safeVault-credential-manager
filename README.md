@@ -4,7 +4,23 @@
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Version](https://img.shields.io/badge/version-1.0.0-orange)
 
-A secure, lightweight, and user-friendly credential management system designed to store and manage sensitive information such as passwords, API keys, and digital certificates. safeVault is built with a focus on privacy, ensuring that your data remains yours alone.
+A secure, lightweight, and user-friendly credential management system designed to store and manage sensitive information such as passwords, API keys, and digital certificates. **SafeVault** is built with a focus on privacy, ensuring that your data remains yours alone.
+
+## Table of Contents
+
+- [Features](#features)
+- [Architecture Overview](#architecture-overview)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Docker Deployment](#docker-deployment)
+- [Usage](#usage)
+  - [CLI Commands](#cli-commands)
+- [Security](#security)
+- [Future Roadmap](#future-roadmap)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Features
 
@@ -18,18 +34,18 @@ A secure, lightweight, and user-friendly credential management system designed t
 
 ## Architecture Overview
 
-safeVault utilizes a client-side encryption model. Sensitive data is encrypted on the user's device before being synchronized to the central database. 
+SafeVault utilizes a client-side encryption model. Sensitive data is encrypted on the user's device before being synchronized to the central database. 
 
 - **Key Derivation**: We use Argon2id with a high iteration count and memory cost to protect against brute-force attacks on the master password.
-- **Data Storage**: Encrypted blobs are stored in indexedDB (browser) or SQLite (local CLI), and optionally synced to a PostgreSQL backend.
+- **Data Storage**: Encrypted blobs are stored in IndexedDB (browser) or SQLite (local CLI), and optionally synced to a PostgreSQL backend.
 - **Communication**: All API calls are protected via TLS 1.3, and payload signatures ensure data integrity.
 
 ## Tech Stack
 
-- **Backend**: Node.js / Express or Python / FastAPI
+- **Backend**: Node.js (Express) or Python (FastAPI)
 - **Database**: SQLite (local) or PostgreSQL (self-hosted)
 - **Encryption**: OpenSSL, Web Crypto API, Argon2
-- **Frontend**: React / Tailwind CSS / Electron
+- **Frontend**: React, Tailwind CSS, Electron
 
 ## Getting Started
 
@@ -49,10 +65,15 @@ safeVault utilizes a client-side encryption model. Sensitive data is encrypted o
    ```
 
 2. **Install dependencies**:
+
+   **For Node.js:**
    ```bash
-   npm install # For Node.js
-   # OR
-   pip install -r requirements.txt # For Python
+   npm install
+   ```
+
+   **For Python:**
+   ```bash
+   pip install -r requirements.txt
    ```
 
 3. **Configure Environment**:
@@ -66,7 +87,7 @@ safeVault utilizes a client-side encryption model. Sensitive data is encrypted o
 
 ### Docker Deployment
 
-To run safeVault using Docker:
+To run SafeVault using Docker:
 ```bash
 docker-compose up -d
 ```
