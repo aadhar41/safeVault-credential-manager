@@ -20,12 +20,20 @@ import {
 
 const App = () => {
   // State Management
-  const [credentials, setCredentials] = useState([]);
+  const [credentials, setCredentials] = useState(() => {
+    const saved = localStorage.getItem('safevault_credentials');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [searchQuery, setSearchQuery] = useState('');
   const [view, setView] = useState('home'); // 'home', 'add', 'detail'
   const [selectedItem, setSelectedItem] = useState(null);
   const [showPassword, setShowPassword] = useState({});
   const [isSecureMode, setIsSecureMode] = useState(true);
+
+  // Persistence
+  useEffect(() => {
+    localStorage.setItem('safevault_credentials', JSON.stringify(credentials));
+  }, [credentials]);
 
   // Form State
   const [formData, setFormData] = useState({

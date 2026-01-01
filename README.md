@@ -30,6 +30,7 @@ A secure, lightweight, and user-friendly credential management system designed t
 - **Cross-Platform Support**: Unified experience across CLI, Web, and Desktop (Electron).
 - **Secure Sharing**: Safely share credentials with team members using RSA-4096 public-key cryptography.
 - **Audit Logs**: Comprehensive tracking of access, modifications, and sharing events.
+- **Persistent Storage**: Data remains safe and available even after the app is killed or device is restarted.
 - **Automatic Backups**: Encrypted cloud sync and local backup rotation.
 
 ## Architecture Overview
