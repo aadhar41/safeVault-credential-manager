@@ -15,7 +15,8 @@ import {
   Save,
   X,
   Lock,
-  Download
+  Download,
+  Upload
 } from 'lucide-react';
 
 const App = () => {
@@ -125,6 +126,37 @@ const App = () => {
     setShowPassword(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
+  // Import/Export
+  const exportData = () => {
+    const dataStr = JSON.stringify(credentials, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `safevault-backup-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importData = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const imported = JSON.parse(event.target.result);
+        if (Array.isArray(imported)) {
+          if (confirm('Import data? This will merge with your existing credentials.')) {
+            setCredentials(prev => [...imported, ...prev]);
+          }
+        }
+      } catch (err) {
+        alert('Invalid backup file');
+      }
+    };
+    reader.readAsText(file);
+  };
+
   // Filtered List
   const filteredCredentials = useMemo(() => {
     return credentials.filter(c =>
@@ -143,13 +175,26 @@ const App = () => {
             <Shield size={28} />
             <h1 className="text-xl font-bold tracking-tight text-slate-900">SafeVault</h1>
           </div>
-          <button
-            onClick={() => setIsSecureMode(!isSecureMode)}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${isSecureMode ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
-              }`}
-          >
-            {isSecureMode ? '● Encrypted' : '○ Unlocked'}
-          </button>
+          <div className="flex items-center gap-2">
+            <button 
+              onClick={exportData}
+              className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors"
+                title="Export Backup"
+            >
+              <Download size={20} />
+            </button>
+            <label className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer" title="Import Backup">
+              <Upload size={20} />
+              <input type="file" className="hidden" accept=".json" onChange={importData} />
+            </label>
+            <button
+              onClick={() => setIsSecureMode(!isSecureMode)}
+              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${isSecureMode ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
+                }`}
+            >
+              {isSecureMode ? '● Encrypted' : '○ Unlocked'}
+            </button>
+          </div>
         </div>
 
         <div className="relative">
@@ -194,7 +239,7 @@ const App = () => {
 
       <button
         onClick={() => { resetForm(); setView('add'); }}
-        className="fixed bottom-6 right-6 w-14 h-14 bg-indigo-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-indigo-700 transition-colors active:scale-95"
+        className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] right-6 w-14 h-14 bg-indigo-600 text-white rounded-full shadow-lg flex items-center justify-center hover:bg-indigo-700 transition-colors active:scale-95 z-30"
       >
         <Plus size={28} />
       </button>

@@ -42,6 +42,9 @@ A secure, lightweight, and user-friendly credential management system designed t
 - **Audit Logs**: Comprehensive tracking of access, modifications, and sharing events.
 - **Persistent Storage**: Data remains safe and available even after the app is killed or device is restarted.
 - **Automatic Backups**: Encrypted cloud sync and local backup rotation.
+- **Backup & Restore**: Easily export your vault to JSON or import existing backups.
+- **Perfected FAB Layout**: Floating Action Button optimized for mobile safe areas to prevent overlap.
+- **File Attachments**: Attach files to your credentials for easy access and sharing.
 
 ## 🏗 Architecture Overview
 
