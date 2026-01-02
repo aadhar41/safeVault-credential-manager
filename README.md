@@ -3,8 +3,19 @@
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 ![Version](https://img.shields.io/badge/version-1.0.0-orange)
+![Node.js](https://img.shields.io/badge/node.js-v18+-339933?logo=node.js&logoColor=white)
+![Python](https://img.shields.io/badge/python-3.10+-3776AB?logo=python&logoColor=white)
 
 A secure, lightweight, and user-friendly credential management system designed to store and manage sensitive information such as passwords, API keys, and digital certificates. **SafeVault** is built with a focus on privacy, ensuring that your data remains yours alone.
+
+## 📲 Download SafeVault
+
+[**📥 Download Android APK (v1.0.0)**](https://github.com/yourusername/safeVault-credential-manager/releases/download/v1.0.0/app-debug.apk)
+
+---
+
+> [!TIP]
+> After downloading the APK, you may need to allow "Install from Unknown Sources" in your Android settings to install the app.
 
 ## Table of Contents
 
@@ -16,13 +27,12 @@ A secure, lightweight, and user-friendly credential management system designed t
   - [Installation](#installation)
   - [Docker Deployment](#docker-deployment)
 - [Usage](#usage)
-  - [CLI Commands](#cli-commands)
 - [Security](#security)
 - [Future Roadmap](#future-roadmap)
 - [Contributing](#contributing)
 - [License](#license)
 
-## Features
+## 🚀 Features
 
 - **End-to-End Encryption**: All data is encrypted locally before being stored using industry-standard AES-256-GCM encryption.
 - **Zero-Knowledge Architecture**: Your master password is never stored or transmitted; keys are derived using Argon2.
@@ -33,7 +43,7 @@ A secure, lightweight, and user-friendly credential management system designed t
 - **Persistent Storage**: Data remains safe and available even after the app is killed or device is restarted.
 - **Automatic Backups**: Encrypted cloud sync and local backup rotation.
 
-## Architecture Overview
+## 🏗 Architecture Overview
 
 SafeVault utilizes a client-side encryption model. Sensitive data is encrypted on the user's device before being synchronized to the central database. 
 
@@ -41,19 +51,21 @@ SafeVault utilizes a client-side encryption model. Sensitive data is encrypted o
 - **Data Storage**: Encrypted blobs are stored in IndexedDB (browser) or SQLite (local CLI), and optionally synced to a PostgreSQL backend.
 - **Communication**: All API calls are protected via TLS 1.3, and payload signatures ensure data integrity.
 
-## Tech Stack
+## 🛠 Tech Stack
 
-- **Backend**: Node.js (Express) or Python (FastAPI)
-- **Database**: SQLite (local) or PostgreSQL (self-hosted)
-- **Encryption**: OpenSSL, Web Crypto API, Argon2
-- **Frontend**: React, Tailwind CSS, Electron
+| Component | Technologies |
+| :--- | :--- |
+| **Backend** | Node.js (Express) / Python (FastAPI) |
+| **Database** | SQLite (Local) / PostgreSQL (Self-hosted) |
+| **Encryption** | OpenSSL, Web Crypto API, Argon2 |
+| **Frontend** | React, Tailwind CSS, Electron |
 
-## Getting Started
+## 🏁 Getting Started
 
 ### Prerequisites
 
 - **Node.js**: v18 or higher
-- **Python**: 3.10+ (if using the Python backend)
+- **Python**: 3.10+
 - **OpenSSL**: 3.0+
 - **Docker**: (Optional) For containerized deployment
 
@@ -65,7 +77,13 @@ SafeVault utilizes a client-side encryption model. Sensitive data is encrypted o
    cd safeVault-credential-manager
    ```
 
-2. **Install dependencies**:
+2. **Configure Environment**:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+3. **Install dependencies**:
 
    **For Node.js:**
    ```bash
@@ -77,55 +95,32 @@ SafeVault utilizes a client-side encryption model. Sensitive data is encrypted o
    pip install -r requirements.txt
    ```
 
-3. **Configure Environment**:
-   Create a `.env` file in the root directory:
-   ```env
-   PORT=3000
-   DATABASE_URL=./vault.db
-   ENCRYPTION_KEY_STRENGTH=256
-   SECRET_KEY=your_super_secret_key_here
-   ```
-
 ### Docker Deployment
 
 To run SafeVault using Docker:
 ```bash
 docker-compose up -d
 ```
-This will spin up the web interface, the API, and a PostgreSQL instance.
 
-## Usage
+## 📖 Usage
 
 ### CLI Commands
 
-1. **Initialize the Vault**:
-   ```bash
-   safevault init
-   ```
-2. **Add a Credential**:
-   ```bash
-   safevault add --title "GitHub" --username "user" --password "secure-pass" --url "https://github.com"
-   ```
-3. **List all Credentials**:
-   ```bash
-   safevault list
-   ```
-4. **Retrieve a Credential**:
-   ```bash
-   safevault get GitHub --copy # Copies password to clipboard
-   ```
-5. **Generate a Password**:
-   ```bash
-   safevault generate --length 24 --symbols
-   ```
+| Command | Description |
+| :--- | :--- |
+| `safevault init` | Initialize the Vault and set master password |
+| `safevault add` | Add a new credential (title, username, password, url) |
+| `safevault list` | List all stored credentials |
+| `safevault get <title>` | Retrieve a credential (use `--copy` for clipboard) |
+| `safevault generate` | Generate a secure random password |
 
-## Security
+## 🛡 Security
 
 This project takes security seriously. We use industry-standard cryptographic primitives and undergo regular internal audits. 
 - **Bug Bounty**: We reward responsible disclosure of security vulnerabilities.
 - **Reporting**: If you discover any vulnerabilities, please report them via our [Security Policy](SECURITY.md).
 
-## Future Roadmap
+## 🗺 Future Roadmap
 
 - [ ] **Browser Extensions**: Native integration for Chrome, Firefox, and Safari.
 - [ ] **Mobile Application**: React Native app with FaceID/TouchID support.
@@ -134,10 +129,10 @@ This project takes security seriously. We use industry-standard cryptographic pr
 - [ ] **Offline Sync**: Peer-to-peer synchronization for local networks.
 - [ ] **Emergency Access**: Trusted contact recovery mechanism.
 
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
-## License
+## 📄 License
 
 Distributed under the MIT License. See `LICENSE` for more information.

@@ -51,20 +51,35 @@ const App = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Handle File Uploads (Simulated)
+  // Handle File Uploads
   const handleFileUpload = (e) => {
     const files = Array.from(e.target.files);
-    const newAttachments = files.map(file => ({
-      name: file.name,
-      size: (file.size / 1024).toFixed(1) + ' KB',
-      type: file.type,
-      id: Math.random().toString(36).substr(2, 9),
-      url: URL.createObjectURL(file)
-    }));
-    setFormData(prev => ({
-      ...prev,
-      attachments: [...prev.attachments, ...newAttachments]
-    }));
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const newAttachment = {
+          name: file.name,
+          size: (file.size / 1024).toFixed(1) + ' KB',
+          type: file.type,
+          id: Math.random().toString(36).substr(2, 9),
+          url: event.target.result // Base64 string
+        };
+        setFormData(prev => ({
+          ...prev,
+          attachments: [...prev.attachments, newAttachment]
+        }));
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const downloadFile = (file) => {
+    const link = document.createElement('a');
+    link.href = file.url;
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const removeAttachment = (id) => {
@@ -122,7 +137,7 @@ const App = () => {
   // Views
   const renderHome = () => (
     <div className="flex flex-col h-full bg-slate-50">
-      <header className="p-6 bg-white border-b border-slate-200">
+      <header className="p-6 pt-[calc(1.5rem+env(safe-area-inset-top))] bg-white border-b border-slate-200">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2 text-indigo-600">
             <Shield size={28} />
@@ -188,7 +203,7 @@ const App = () => {
 
   const renderAdd = () => (
     <div className="flex flex-col h-full bg-white">
-      <header className="p-4 border-b flex items-center gap-4 sticky top-0 bg-white z-10">
+      <header className="p-4 pt-[calc(1rem+env(safe-area-inset-top))] border-b flex items-center gap-4 sticky top-0 bg-white z-10">
         <button onClick={() => setView('home')} className="p-2 hover:bg-slate-100 rounded-full">
           <ChevronLeft />
         </button>
@@ -291,7 +306,7 @@ const App = () => {
         </div>
       </main>
 
-      <div className="p-4 border-t bg-white fixed bottom-0 left-0 right-0">
+      <div className="p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] border-t bg-white fixed bottom-0 left-0 right-0">
         <button
           onClick={saveCredential}
           className="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
@@ -305,7 +320,7 @@ const App = () => {
 
   const renderDetail = () => (
     <div className="flex flex-col h-full bg-slate-50">
-      <header className="p-4 bg-white border-b flex items-center justify-between sticky top-0 z-10">
+      <header className="p-4 pt-[calc(1rem+env(safe-area-inset-top))] bg-white border-b flex items-center justify-between sticky top-0 z-10">
         <div className="flex items-center gap-4">
           <button onClick={() => setView('home')} className="p-2 hover:bg-slate-100 rounded-full text-slate-600">
             <ChevronLeft />
@@ -398,7 +413,10 @@ const App = () => {
                       <p className="text-[10px] text-slate-400 font-medium">{file.size}</p>
                     </div>
                   </div>
-                  <button className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg">
+                  <button 
+                    onClick={() => downloadFile(file)}
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg"
+                  >
                     <Download size={16} />
                   </button>
                 </div>
@@ -416,11 +434,11 @@ const App = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-slate-900 p-0 sm:p-4">
-      <div className="w-full max-w-md h-[100vh] sm:h-[800px] bg-white sm:rounded-[3rem] sm:border-[8px] border-slate-800 shadow-2xl relative overflow-hidden">
+      <div className="w-full max-w-md h-[100vh] sm:h-[800px] bg-white sm:rounded-[3rem] sm:border-[8px] border-slate-800 shadow-2xl relative">
         {/* Notch for mobile look */}
         <div className="hidden sm:block absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-800 rounded-b-2xl z-20"></div>
 
-        <div className="h-full pt-2">
+        <div className="h-full">
           {view === 'home' && renderHome()}
           {view === 'add' && renderAdd()}
           {view === 'detail' && renderDetail()}
