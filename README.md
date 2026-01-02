@@ -17,6 +17,12 @@ A secure, lightweight, and user-friendly credential management system designed t
 > [!TIP]
 > After downloading the APK, you may need to allow "Install from Unknown Sources" in your Android settings to install the app.
 
+## 📸 Screenshots
+
+| List Screen | Add Credential | Details |
+| :---: | :---: | :---: |
+| ![List](public/screens/list.jpg) | ![Add](public/screens/add.jpg) | ![Details](public/screens/details.jpg) |
+
 ## Table of Contents
 
 - [Features](#features)
@@ -45,12 +51,15 @@ A secure, lightweight, and user-friendly credential management system designed t
 - **Backup & Restore**: Easily export your vault to JSON or import existing backups.
 - **Perfected FAB Layout**: Floating Action Button optimized for mobile safe areas to prevent overlap.
 - **File Attachments**: Attach files to your credentials for easy access and sharing.
+- **Biometric Unlock**: Support for Fingerprint and FaceID on supported mobile devices.
+- **Auto-Fill Service**: Seamlessly fill credentials into other apps and websites.
 
 ## 🏗 Architecture Overview
 
 SafeVault utilizes a client-side encryption model. Sensitive data is encrypted on the user's device before being synchronized to the central database. 
 
-- **Key Derivation**: We use Argon2id with a high iteration count and memory cost to protect against brute-force attacks on the master password.
+- **Key Derivation**: We use **Argon2id** (Memory: 64MB, Iterations: 3, Parallelism: 4) to derive the Master Key from your password.
+- **Encryption Layer**: Data is encrypted using **AES-256-GCM**. Each entry has a unique 96-bit Initialization Vector (IV) and a 128-bit Authentication Tag to ensure data integrity.
 - **Data Storage**: Encrypted blobs are stored in IndexedDB (browser) or SQLite (local CLI), and optionally synced to a PostgreSQL backend.
 - **Communication**: All API calls are protected via TLS 1.3, and payload signatures ensure data integrity.
 
@@ -62,6 +71,7 @@ SafeVault utilizes a client-side encryption model. Sensitive data is encrypted o
 | **Database** | SQLite (Local) / PostgreSQL (Self-hosted) |
 | **Encryption** | OpenSSL, Web Crypto API, Argon2 |
 | **Frontend** | React, Tailwind CSS, Electron |
+| **Mobile** | React Native / Expo |
 
 ## 🏁 Getting Started
 
@@ -83,19 +93,26 @@ SafeVault utilizes a client-side encryption model. Sensitive data is encrypted o
 2. **Configure Environment**:
    ```bash
    cp .env.example .env
-   # Edit .env with your configuration
+   # Edit .env with your configuration (JWT_SECRET, DB_URL, etc.)
    ```
 
 3. **Install dependencies**:
 
-   **For Node.js:**
+   **For Node.js (Backend/Web):**
    ```bash
    npm install
    ```
 
-   **For Python:**
+   **For Python (CLI/Scripts):**
    ```bash
    pip install -r requirements.txt
+   ```
+
+   **For Mobile (React Native):**
+   ```bash
+   cd mobile
+   npm install
+   npx expo start
    ```
 
 ### Docker Deployment
@@ -103,39 +120,3 @@ SafeVault utilizes a client-side encryption model. Sensitive data is encrypted o
 To run SafeVault using Docker:
 ```bash
 docker-compose up -d
-```
-
-## 📖 Usage
-
-### CLI Commands
-
-| Command | Description |
-| :--- | :--- |
-| `safevault init` | Initialize the Vault and set master password |
-| `safevault add` | Add a new credential (title, username, password, url) |
-| `safevault list` | List all stored credentials |
-| `safevault get <title>` | Retrieve a credential (use `--copy` for clipboard) |
-| `safevault generate` | Generate a secure random password |
-
-## 🛡 Security
-
-This project takes security seriously. We use industry-standard cryptographic primitives and undergo regular internal audits. 
-- **Bug Bounty**: We reward responsible disclosure of security vulnerabilities.
-- **Reporting**: If you discover any vulnerabilities, please report them via our [Security Policy](SECURITY.md).
-
-## 🗺 Future Roadmap
-
-- [ ] **Browser Extensions**: Native integration for Chrome, Firefox, and Safari.
-- [ ] **Mobile Application**: React Native app with FaceID/TouchID support.
-- [ ] **Password Health Dashboard**: Integration with "Have I Been Pwned" API.
-- [ ] **SSH Key & Certificate Management**: Support for rotating SSL/TLS certificates.
-- [ ] **Offline Sync**: Peer-to-peer synchronization for local networks.
-- [ ] **Emergency Access**: Trusted contact recovery mechanism.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
-
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
