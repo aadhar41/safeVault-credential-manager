@@ -8,9 +8,12 @@
 
 A secure, lightweight, and user-friendly credential management system designed to store and manage sensitive information such as passwords, API keys, and digital certificates. **SafeVault** is built with a focus on privacy, ensuring that your data remains yours alone.
 
+> [!IMPORTANT]
+> **Project Origin**: This project is a sophisticated build developed through the synergy of **Artificial Intelligence** and **personal engineering expertise**. It serves as a testament to modern AI-assisted development workflows, where AI handles boilerplate and complex algorithmic suggestions while human oversight ensures security, architectural integrity, and refined user experience.
+
 ## 📲 Download SafeVault
 
-[**📥 Download Android APK (v1.0.0)**](https://github.com/yourusername/safeVault-credential-manager/releases/download/v1.0.0/app-debug.apk)
+[**📥 SafeVault Credential Manager – Download Android APK (v1.3.0)**](https://github.com/user-attachments/files/24404664/SafeVault.Credential.Manager.v1.3.0.zip)
 
 ---
 
@@ -58,8 +61,8 @@ A secure, lightweight, and user-friendly credential management system designed t
 
 SafeVault utilizes a client-side encryption model. Sensitive data is encrypted on the user's device before being synchronized to the central database. 
 
-- **Key Derivation**: We use **Argon2id** (Memory: 64MB, Iterations: 3, Parallelism: 4) to derive the Master Key from your password.
-- **Encryption Layer**: Data is encrypted using **AES-256-GCM**. Each entry has a unique 96-bit Initialization Vector (IV) and a 128-bit Authentication Tag to ensure data integrity.
+- **Key Derivation**: We use **Argon2id** (Memory: 64MB, Iterations: 3, Parallelism: 4) to derive the Master Key from your password. This makes brute-force attacks computationally expensive.
+- **Encryption Layer**: Data is encrypted using **AES-256-GCM**. Each entry has a unique 96-bit Initialization Vector (IV) and a 128-bit Authentication Tag to ensure data integrity and prevent tampering.
 - **Data Storage**: Encrypted blobs are stored in IndexedDB (browser) or SQLite (local CLI), and optionally synced to a PostgreSQL backend.
 - **Communication**: All API calls are protected via TLS 1.3, and payload signatures ensure data integrity.
 
