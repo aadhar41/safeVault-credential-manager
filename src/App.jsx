@@ -141,20 +141,34 @@ const App = () => {
       const dataStr = JSON.stringify(credentials, null, 2);
       const fileName = `safevault-backup-${new Date().toISOString().split('T')[0]}.json`;
       
-      // Try using Web Share API if available (best for mobile)
-      if (navigator.share && navigator.canShare) {
-        const file = new File([dataStr], fileName, { type: 'application/json' });
-        if (navigator.canShare({ files: [file] })) {
+      // Layer 1: Try Web Share API with File (Native mobile feel)
+      if (navigator.share) {
+        try {
+          // Some WebViews prefer text/plain for sharing
+          const file = new File([dataStr], fileName, { type: 'text/plain' });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({
+              files: [file],
+              title: 'SafeVault Backup',
+            });
+            return;
+          }
+          
+          // Layer 2: Try Web Share API with Text fallback
+          // This allows users to "Copy" or "Save to Notes/Files" even if file share fails
           await navigator.share({
-            files: [file],
             title: 'SafeVault Backup',
-            text: 'Your encrypted credentials backup'
+            text: dataStr
           });
           return;
+        } catch (shareErr) {
+          // If user cancelled, don't show error
+          if (shareErr.name === 'AbortError') return;
+          console.warn('Share API failed, falling back to download:', shareErr);
         }
       }
 
-      // Fallback to traditional download
+      // Layer 3: Fallback to traditional download (Best for desktop)
       const blob = new Blob([dataStr], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       
@@ -165,14 +179,24 @@ const App = () => {
       document.body.appendChild(link);
       link.click();
       
-      // Increased delay to ensure mobile browser handles the download
       setTimeout(() => {
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
       }, 5000);
+
+      // Layer 4: Final fallback for restricted WebViews (APK without Share/Download support)
+      // We show a simple alert or ideally copy to clipboard.
+      // Let's add a small toast/feedback later if this becomes a common case.
+      
     } catch (err) {
       if (err.name !== 'AbortError') {
-        alert('Export failed: ' + err.message);
+        // Ultimate fallback: Copy to clipboard and notify user
+        try {
+          await navigator.clipboard.writeText(JSON.stringify(credentials, null, 2));
+          alert('Export failed for this device, but backup data has been copied to your clipboard!');
+        } catch (clipErr) {
+          alert('Export failed. Please ensure the app has storage permissions.');
+        }
       }
     }
   };
