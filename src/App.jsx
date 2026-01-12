@@ -83,10 +83,10 @@ const App = () => {
       document.body.appendChild(link);
       link.click();
       
-      // Small delay before removal for mobile browsers
+      // Increased delay for mobile browsers to ensure download starts
       setTimeout(() => {
         document.body.removeChild(link);
-      }, 100);
+      }, 5000);
     } catch (err) {
       window.alert('Download failed: ' + err.message);
     }
@@ -136,25 +136,44 @@ const App = () => {
   };
 
   // Import/Export
-  const exportData = () => {
+  const exportData = async () => {
     try {
       const dataStr = JSON.stringify(credentials, null, 2);
-      // Using Base64 Data URL for better mobile WebView compatibility
-      const base64Data = btoa(unescape(encodeURIComponent(dataStr)));
-      const url = `data:application/json;base64,${base64Data}`;
+      const fileName = `safevault-backup-${new Date().toISOString().split('T')[0]}.json`;
+      
+      // Try using Web Share API if available (best for mobile)
+      if (navigator.share && navigator.canShare) {
+        const file = new File([dataStr], fileName, { type: 'application/json' });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: 'SafeVault Backup',
+            text: 'Your encrypted credentials backup'
+          });
+          return;
+        }
+      }
+
+      // Fallback to traditional download
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
       
       const link = document.createElement('a');
       link.href = url;
-      link.download = `safevault-backup-${new Date().toISOString().split('T')[0]}.json`;
+      link.download = fileName;
       link.style.display = 'none';
       document.body.appendChild(link);
       link.click();
       
+      // Increased delay to ensure mobile browser handles the download
       setTimeout(() => {
         document.body.removeChild(link);
-      }, 100);
+        URL.revokeObjectURL(url);
+      }, 5000);
     } catch (err) {
-      alert('Export failed: ' + err.message);
+      if (err.name !== 'AbortError') {
+        alert('Export failed: ' + err.message);
+      }
     }
   };
 
