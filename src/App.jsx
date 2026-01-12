@@ -139,9 +139,8 @@ const App = () => {
   const exportData = () => {
     try {
       const dataStr = JSON.stringify(credentials, null, 2);
-      // Using Base64 Data URL for better mobile WebView compatibility
-      const base64Data = btoa(unescape(encodeURIComponent(dataStr)));
-      const url = `data:application/json;base64,${base64Data}`;
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
       
       const link = document.createElement('a');
       link.href = url;
@@ -152,6 +151,7 @@ const App = () => {
       
       setTimeout(() => {
         document.body.removeChild(link);
+        URL.revokeObjectURL(url);
       }, 100);
     } catch (err) {
       alert('Export failed: ' + err.message);
